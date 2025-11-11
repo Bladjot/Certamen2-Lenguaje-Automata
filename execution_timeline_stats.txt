@@ -1,0 +1,51 @@
+=== REPORTE ESTADÍSTICO - SIMULADOR DISTRIBUIDO ===
+
+Total de eventos: 20
+Total de threads: 6
+Rango temporal: 0 - 0
+Duración: 0 unidades
+
+=== ESTADÍSTICAS POR THREAD ===
+
+Scheduler_0:
+  Total eventos: 6
+  Acciones:
+    End: 2
+    Start: 3
+    WaitingWorkers: 1
+
+System_0:
+  Total eventos: 2
+  Acciones:
+    Start: 1
+    Stop: 1
+
+Worker_0:
+  Total eventos: 3
+  Acciones:
+    End: 1
+    Start: 2
+
+Worker_1:
+  Total eventos: 3
+  Acciones:
+    End: 1
+    Start: 2
+
+Worker_2:
+  Total eventos: 3
+  Acciones:
+    End: 1
+    Start: 2
+
+Worker_3:
+  Total eventos: 3
+  Acciones:
+    End: 1
+    Start: 2
+
+=== ESTADÍSTICAS POR ACCIÓN ===
+End: 6 eventos
+Start: 12 eventos
+Stop: 1 eventos
+WaitingWorkers: 1 eventos

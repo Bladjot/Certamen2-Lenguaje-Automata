@@ -1,0 +1,20 @@
+{"thread_type":"System","thread_id":0,"event_type":"INIT","timestamp":0,"action":"Start","lvt":0,"message":"Simulador iniciado - Logging habilitado","created_at":"2025-11-11 15:35:36.464"}
+{"thread_type":"Scheduler","thread_id":0,"event_type":"INIT","timestamp":0,"action":"Start","lvt":0,"message":"Simulador iniciado","created_at":"2025-11-11 15:35:36.469"}
+{"thread_type":"Worker","thread_id":0,"event_type":"INIT","timestamp":0,"action":"Start","lvt":0,"message":"Worker 0 inicializado","created_at":"2025-11-11 15:35:36.473"}
+{"thread_type":"Worker","thread_id":1,"event_type":"INIT","timestamp":0,"action":"Start","lvt":0,"message":"Worker 1 inicializado","created_at":"2025-11-11 15:35:36.475"}
+{"thread_type":"Worker","thread_id":2,"event_type":"INIT","timestamp":0,"action":"Start","lvt":0,"message":"Worker 2 inicializado","created_at":"2025-11-11 15:35:36.479"}
+{"thread_type":"Worker","thread_id":3,"event_type":"INIT","timestamp":0,"action":"Start","lvt":0,"message":"Worker 3 inicializado","created_at":"2025-11-11 15:35:36.482"}
+{"thread_type":"Scheduler","thread_id":0,"event_type":"INIT","timestamp":0,"action":"Start","lvt":0,"message":"Scheduler inicializado","created_at":"2025-11-11 15:35:36.483"}
+{"thread_type":"Worker","thread_id":3,"event_type":"GOROUTINE","timestamp":0,"action":"Start","lvt":0,"message":"Goroutine Worker 3 iniciada","created_at":"2025-11-11 15:35:36.484"}
+{"thread_type":"Worker","thread_id":1,"event_type":"GOROUTINE","timestamp":0,"action":"Start","lvt":0,"message":"Goroutine Worker 1 iniciada","created_at":"2025-11-11 15:35:36.485"}
+{"thread_type":"Worker","thread_id":0,"event_type":"GOROUTINE","timestamp":0,"action":"Start","lvt":0,"message":"Goroutine Worker 0 iniciada","created_at":"2025-11-11 15:35:36.486"}
+{"thread_type":"Worker","thread_id":2,"event_type":"GOROUTINE","timestamp":0,"action":"Start","lvt":0,"message":"Goroutine Worker 2 iniciada","created_at":"2025-11-11 15:35:36.488"}
+{"thread_type":"Scheduler","thread_id":0,"event_type":"SIMULATION","timestamp":0,"action":"Start","lvt":0,"message":"Iniciando simulación principal","created_at":"2025-11-11 15:35:36.985"}
+{"thread_type":"Scheduler","thread_id":0,"event_type":"SIMULATION","timestamp":0,"action":"WaitingWorkers","lvt":0,"message":"Esperando workers","created_at":"2025-11-11 15:35:48.996"}
+{"thread_type":"Worker","thread_id":1,"event_type":"GOROUTINE","timestamp":0,"action":"End","lvt":0,"message":"Goroutine Worker 1 terminada","created_at":"2025-11-11 15:35:48.999"}
+{"thread_type":"Worker","thread_id":0,"event_type":"GOROUTINE","timestamp":0,"action":"End","lvt":0,"message":"Goroutine Worker 0 terminada","created_at":"2025-11-11 15:35:49.000"}
+{"thread_type":"Worker","thread_id":2,"event_type":"GOROUTINE","timestamp":0,"action":"End","lvt":0,"message":"Goroutine Worker 2 terminada","created_at":"2025-11-11 15:35:49.009"}
+{"thread_type":"Worker","thread_id":3,"event_type":"GOROUTINE","timestamp":0,"action":"End","lvt":0,"message":"Goroutine Worker 3 terminada","created_at":"2025-11-11 15:35:49.015"}
+{"thread_type":"Scheduler","thread_id":0,"event_type":"SIMULATION","timestamp":0,"action":"End","lvt":0,"message":"Simulación completada","created_at":"2025-11-11 15:35:49.017"}
+{"thread_type":"Scheduler","thread_id":0,"event_type":"SHUTDOWN","timestamp":0,"action":"End","lvt":0,"message":"Sistema cerrando","created_at":"2025-11-11 15:35:49.018"}
+{"thread_type":"System","thread_id":0,"event_type":"SHUTDOWN","timestamp":0,"action":"Stop","lvt":0,"message":"Simulador terminado - Cerrando logs","created_at":"2025-11-11 15:35:49.019"}

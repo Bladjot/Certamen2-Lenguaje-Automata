@@ -1,0 +1,21 @@
+ThreadType,ThreadID,Timestamp,Action,EventType,LVT,Message,CreatedAt
+System,0,0,Start,INIT,0,Simulador iniciado - Logging habilitado,2025-11-11 15:35:36.464
+Scheduler,0,0,Start,INIT,0,Simulador iniciado,2025-11-11 15:35:36.469
+Worker,0,0,Start,INIT,0,Worker 0 inicializado,2025-11-11 15:35:36.473
+Worker,1,0,Start,INIT,0,Worker 1 inicializado,2025-11-11 15:35:36.475
+Worker,2,0,Start,INIT,0,Worker 2 inicializado,2025-11-11 15:35:36.479
+Worker,3,0,Start,INIT,0,Worker 3 inicializado,2025-11-11 15:35:36.482
+Scheduler,0,0,Start,INIT,0,Scheduler inicializado,2025-11-11 15:35:36.483
+Worker,3,0,Start,GOROUTINE,0,Goroutine Worker 3 iniciada,2025-11-11 15:35:36.484
+Worker,1,0,Start,GOROUTINE,0,Goroutine Worker 1 iniciada,2025-11-11 15:35:36.485
+Worker,0,0,Start,GOROUTINE,0,Goroutine Worker 0 iniciada,2025-11-11 15:35:36.486
+Worker,2,0,Start,GOROUTINE,0,Goroutine Worker 2 iniciada,2025-11-11 15:35:36.488
+Scheduler,0,0,Start,SIMULATION,0,Iniciando simulación principal,2025-11-11 15:35:36.985
+Scheduler,0,0,WaitingWorkers,SIMULATION,0,Esperando workers,2025-11-11 15:35:48.996
+Worker,1,0,End,GOROUTINE,0,Goroutine Worker 1 terminada,2025-11-11 15:35:48.999
+Worker,0,0,End,GOROUTINE,0,Goroutine Worker 0 terminada,2025-11-11 15:35:49.000
+Worker,2,0,End,GOROUTINE,0,Goroutine Worker 2 terminada,2025-11-11 15:35:49.009
+Worker,3,0,End,GOROUTINE,0,Goroutine Worker 3 terminada,2025-11-11 15:35:49.015
+Scheduler,0,0,End,SIMULATION,0,Simulación completada,2025-11-11 15:35:49.017
+Scheduler,0,0,End,SHUTDOWN,0,Sistema cerrando,2025-11-11 15:35:49.018
+System,0,0,Stop,SHUTDOWN,0,Simulador terminado - Cerrando logs,2025-11-11 15:35:49.019
