@@ -1,0 +1,50 @@
+# ======================================
+# ARCHIVOS DEFINITIVAMENTE INNECESARIOS
+# ======================================
+
+# Archivos binarios de Go (se regeneran con 'go build')
+certamen2
+*.exe
+*.bin
+
+# Directorio de checkpoints (archivos binarios grandes y temporales)
+checkpoints/
+*.chk
+
+# Archivos temporales del sistema
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.log
+
+# Archivos de backup del editor
+*~
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Archivos de Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# ======================================
+# ARCHIVOS DE SALIDA (Opcional incluir ejemplos)
+# ======================================
+
+# Logs de ejecución (se regeneran automáticamente)
+benchmark_*.json
+# logs.json  # Descomenta si no quieres ejemplos
+
+# Datos procesados (se regeneran automáticamente)  
+# execution.csv      # Descomenta si no quieres ejemplos
+# thread_summary.csv # Descomenta si no quieres ejemplos
+# speedup.csv        # Descomenta si no quieres ejemplos
+
+# Visualizaciones generadas (se regeneran con visualize.py)
+# *.png              # Descomenta si no quieres ejemplos
+# *.jpg              # Descomenta si no quieres ejemplos
+# execution_timeline_stats.txt # Descomenta si no quieres ejemplos
