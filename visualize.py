@@ -14,6 +14,7 @@ try:
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.patches import FancyArrowPatch
+    from matplotlib.lines import Line2D
 except ImportError as exc:  # pragma: no cover - depende del entorno
     print("matplotlib es requerido para generar la visualización:", exc, file=sys.stderr)
     sys.exit(1)
@@ -54,6 +55,18 @@ def filter_entries(entries, allowed):
     return filtered, len(entries) - len(filtered)
 
 
+def draw_time_axis(ax, max_time):
+    arrow = FancyArrowPatch(
+        (-1.5, 0),
+        (-1.5, max_time),
+        arrowstyle="-|>",
+        color="#0057b7",
+        linewidth=2.5,
+    )
+    ax.add_patch(arrow)
+    ax.text(-1.6, max_time / 2, "Tiempo", rotation=90, color="#0057b7", ha="center", va="center", fontsize=10)
+
+
 def draw_lanes(ax, entities, max_time):
     positions = {}
     spacing = 1.0
@@ -61,8 +74,26 @@ def draw_lanes(ax, entities, max_time):
         x = idx * spacing
         positions[entity] = x
         ax.vlines(x, 0, max_time, colors="#111111", linewidth=2)
-        ax.text(x, -0.5, entity, rotation=90, ha="center", va="top", fontsize=10)
+        ax.text(x, -0.7, entity, rotation=0, ha="center", va="top", fontsize=10)
     return positions
+
+
+def add_legend(ax):
+    handles = [
+        Line2D([0], [0], color=EXTERNAL_COLOR, linewidth=2, marker=r"$\rightarrow$", markersize=12, label="Evento externo"),
+        Line2D([0], [0], color=STRAGGLER_COLOR, linewidth=2, marker=r"$\rightarrow$", markersize=12, label="Straggler"),
+        Line2D([0], [0], color=INTERNAL_COLOR, linewidth=2, marker=r"$\rightarrow$", markersize=12, label="Evento interno"),
+        Line2D([0], [0], color=ROLLBACK_COLOR, linewidth=2, marker=r"$\rightarrow$", markersize=12, label="Rollback"),
+        Line2D([0], [0], color="#1a9850", linewidth=3, label="Checkpoint"),
+        Line2D([0], [0], marker="x", color="#e41a1c", linestyle="", markersize=8, label="Straggler detectado"),
+    ]
+    ax.legend(handles=handles, loc="upper left", bbox_to_anchor=(-0.6, 0.65))
+
+
+EXTERNAL_COLOR = "#1f78b4"
+STRAGGLER_COLOR = "#d73027"
+INTERNAL_COLOR = "#66a61e"
+ROLLBACK_COLOR = "#ff7f00"
 
 
 def add_curved_arrow(ax, start, end, color, rad=0.2, style="-|>", linewidth=2):
@@ -77,7 +108,7 @@ def add_curved_arrow(ax, start, end, color, rad=0.2, style="-|>", linewidth=2):
     ax.add_patch(arrow)
 
 
-def draw_event(ax, entry, positions):
+def draw_event(ax, entry, positions, straggler_ids):
     event = entry.get("event")
     sim_time = entry.get("sim_time", 0)
     entity = entry.get("entity")
@@ -88,27 +119,31 @@ def draw_event(ax, entry, positions):
         target_id = entry.get("target_worker")
         target_entity = f"worker-{target_id}" if target_id is not None else None
         if target_entity in positions:
-            start = (x, sim_time - 0.2)
+            start = (x, sim_time)
             end = (positions[target_entity], sim_time)
-            add_curved_arrow(ax, start, end, "#1b9e77", rad=0.2)
+            event_id = entry.get("event_id")
+            color = STRAGGLER_COLOR if event_id in straggler_ids else EXTERNAL_COLOR
+            add_curved_arrow(ax, start, end, color, rad=0.15)
+    elif event == "external_received":
+        ax.hlines(sim_time, x - 0.25, x + 0.25, colors="#4daf4a", linewidth=4)
     elif event == "external_processed":
-        ax.scatter(x, sim_time, color="#d95f02", s=30, marker="o", zorder=5)
+        ax.scatter(x, sim_time, color="#d95f02", s=35, marker="o", zorder=5)
     elif event == "internal_processed":
         prev = entry.get("details", {}).get("previous_lvt", sim_time)
-        start = (x - 0.15, prev)
-        end = (x - 0.15, sim_time)
-        add_curved_arrow(ax, start, end, "#66a61e", rad=-0.5)
+        start = (x, prev)
+        end = (x, sim_time)
+        add_curved_arrow(ax, start, end, INTERNAL_COLOR, rad=0.5)
     elif event == "checkpoint_created":
-        ax.hlines(sim_time, x - 0.2, x + 0.2, colors="#66a61e", linewidth=3)
+        ax.hlines(sim_time, x - 0.2, x + 0.2, colors="#1a9850", linewidth=2)
     elif event == "straggler_detected":
         ax.plot([x - 0.25, x + 0.25], [sim_time - 0.25, sim_time + 0.25], color="#e41a1c", linewidth=2)
         ax.plot([x - 0.25, x + 0.25], [sim_time + 0.25, sim_time - 0.25], color="#e41a1c", linewidth=2)
     elif event == "rollback_start":
         rollback_to = entry.get("rollback_to", sim_time)
         rollback_from = entry.get("rollback_from", sim_time)
-        start = (x + 0.3, rollback_from)
-        end = (x + 0.3, rollback_to)
-        add_curved_arrow(ax, start, end, "#ff7f00", rad=0.8)
+        start = (x, rollback_from)
+        end = (x, rollback_to)
+        add_curved_arrow(ax, start, end, ROLLBACK_COLOR, rad=-0.8)
     elif event == "rollback_end":
         ax.scatter(x, sim_time, color="#4daf4a", marker="s", s=40, zorder=5)
 
@@ -127,10 +162,16 @@ def plot(entries, output_path: str, show: bool, allowed_events=None):
     max_time = max(entry.get("sim_time", 0) for entry in entries) + 2
     fig, ax = plt.subplots(figsize=(10, 6))
 
+    draw_time_axis(ax, max_time)
     positions = draw_lanes(ax, entities, max_time)
     entries = sorted(entries, key=lambda item: (item.get("sim_time", 0), item.get("wall_time", "")))
+    straggler_ids = {
+        entry.get("event_id")
+        for entry in entries
+        if entry.get("event") == "straggler_detected" and entry.get("event_id") is not None
+    }
     for entry in entries:
-        draw_event(ax, entry, positions)
+        draw_event(ax, entry, positions, straggler_ids)
 
     ax.set_xlim(-1, len(entities))
     ax.set_ylim(max_time, -1)
@@ -142,6 +183,7 @@ def plot(entries, output_path: str, show: bool, allowed_events=None):
     ax.spines["bottom"].set_visible(False)
     ax.spines["left"].set_visible(False)
     fig.tight_layout()
+    add_legend(ax)
     fig.savefig(output_path, dpi=200)
     if show:
         plt.show()
