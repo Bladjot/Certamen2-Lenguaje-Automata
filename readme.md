@@ -7,7 +7,7 @@ Este proyecto implementa un simulador multi-hilo que modela un scheduler (hilo p
 - **Scheduler**: genera `N` eventos externos con timestamps estrictamente crecientes y los asigna aleatoriamente a los workers. También mantiene un reloj virtual y deja trazas de los envíos.
 - **Workers**: mantienen su propio *Local Virtual Time* (LVT), un historial ordenado de eventos externos, una pila de checkpoints y un generador de eventos internos que provocan saltos en el LVT. Cuando un worker recibe un evento externo con timestamp menor a su LVT actual, detecta el straggler, restaura el checkpoint más cercano, y re-procesa los eventos externos a partir de ese punto.
 - **Logging estructurado**: cada acción relevante (envíos, recepciones, checkpoints, eventos internos, rollbacks) queda registrada como una línea JSON en un archivo `execution.log` (o en la ruta que se configure).
-- **Visualización offline** (`visualize.py`): lee el log JSONL y genera un diagrama espacio-tiempo donde se aprecian los eventos por entidad y los rollbacks.
+- **Visualización offline** (`visualizacion.py`): lee el log JSONL y genera un diagrama espacio-tiempo donde se aprecian los eventos por entidad y los rollbacks.
 
 ## Requisitos
 
