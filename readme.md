@@ -1,24 +1,13 @@
 # Simulación de Scheduler/Workers con Rollbacks Optimistas
 
-Este proyecto implementa un simulador multi-hilo que modela un scheduler y un conjunto de workers
-que procesan eventos externos e internos bajo un protocolo optimista. El objetivo es reproducir
-violaciones de causalidad (stragglers), ejecutar rollbacks usando checkpoints y producir trazas que
-puedan ser visualizadas offline.
+Este proyecto implementa un simulador multi-hilo que modela un scheduler (hilo principal) y un conjunto de workers que procesan eventos externos e internos bajo un protocolo optimista. El objetivo es reproducir violaciones de causalidad (stragglers), ejecutar rollbacks usando checkpoints y producir trazas que puedan ser visualizadas offline.
 
 ## Componentes Principales
 
-- **Scheduler**: genera `N` eventos externos con timestamps estrictamente crecientes y los asigna
-  aleatoriamente a los workers. También mantiene un reloj virtual y deja trazas de los envíos.
-- **Workers**: mantienen su propio *Local Virtual Time* (LVT), un historial ordenado de eventos
-  externos, una pila de checkpoints y un generador de eventos internos que provocan saltos en el LVT.
-  Cuando un worker recibe un evento externo con timestamp menor a su LVT actual, detecta el
-  straggler, restaura el checkpoint más cercano, y re-procesa los eventos externos a partir de ese
-  punto.
-- **Logging estructurado**: cada acción relevante (envíos, recepciones, checkpoints, eventos
-  internos, rollbacks) queda registrada como una línea JSON en un archivo `execution.log` (o en la
-  ruta que se configure).
-- **Visualización offline** (`visualize.py`): lee el log JSONL y genera un diagrama espacio-tiempo
-  donde se aprecian los eventos por entidad y los rollbacks.
+- **Scheduler**: genera `N` eventos externos con timestamps estrictamente crecientes y los asigna aleatoriamente a los workers. También mantiene un reloj virtual y deja trazas de los envíos.
+- **Workers**: mantienen su propio *Local Virtual Time* (LVT), un historial ordenado de eventos externos, una pila de checkpoints y un generador de eventos internos que provocan saltos en el LVT. Cuando un worker recibe un evento externo con timestamp menor a su LVT actual, detecta el straggler, restaura el checkpoint más cercano, y re-procesa los eventos externos a partir de ese punto.
+- **Logging estructurado**: cada acción relevante (envíos, recepciones, checkpoints, eventos internos, rollbacks) queda registrada como una línea JSON en un archivo `execution.log` (o en la ruta que se configure).
+- **Visualización offline** (`visualize.py`): lee el log JSONL y genera un diagrama espacio-tiempo donde se aprecian los eventos por entidad y los rollbacks.
 
 ## Requisitos
 
@@ -43,11 +32,9 @@ Parámetros principales:
 - `-channel-buffer`: tamaño de los canales Scheduler→Worker.
 - `-seed`: semilla para reproducir ejecuciones.
 - `-max-time`: tope de LVT para scheduler/workers (por defecto 50) para mantener los diagramas legibles.
-- `-speedup`: si se pasa este flag, el programa ejecuta automáticamente la simulación con 1, 2, 4 y
-  8 workers, guarda un log por corrida y muestra la tabla de *speedup* relativo al caso de 1 worker.
+- `-speedup`: si se pasa este flag, el programa ejecuta automáticamente la simulación con 1, 2, 4 y 8 workers, guarda un log por corrida y muestra la tabla de *speedup* relativo al caso de 1 worker.
 
-Al finalizar, el programa muestra estadísticas por worker: eventos externos procesados, eventos
-internos generados, cantidad de rollbacks, checkpoints creados y LVT final.
+Al finalizar, el programa muestra estadísticas por worker: eventos externos procesados, eventos internos generados, cantidad de rollbacks, checkpoints creados y LVT final.
 
 ## Formato de log
 
@@ -59,21 +46,19 @@ Cada línea del archivo es un objeto JSON con los campos más relevantes:
 - `sim_time`: LVT de la entidad al momento del log.
 - `event_id`, `target_worker`: identificadores útiles para correlacionar envíos y recepciones.
 - `rollback_from` / `rollback_to`: tiempos utilizados al representar la operación de rollback.
-- `details`: mapa con información específica según el evento (p.ej. saltos de LVT en eventos
-  internos, si un evento se procesó durante un replay, etc.).
+- `details`: mapa con información específica según el evento (p.ej. saltos de LVT en eventos internos, si un evento se procesó durante un replay, etc.).
 
 ## Visualización de la ejecución
 
-El script `visualize.py` genera un diagrama inspirado en diagramas espacio-tiempo (columnas por entidad y flechas para los eventos externos) a partir del log JSONL:
+El script `visualizacion.py` genera un diagrama inspirado en diagramas espacio-tiempo (columnas por entidad y flechas para los eventos externos) a partir del log JSONL:
 
 ```bash
-python3 visualize.py execution.jsonl -o timeline.png --show
+python3 visualizacion.py execution.jsonl -o timeline.png --show
 ```
 
 - El eje X representa el tiempo virtual (LVT) y el eje Y cada entidad (scheduler y workers).
 - Los colores y marcadores distinguen los diferentes tipos de eventos.
-- Los rollbacks aparecen como flechas que apuntan desde el tiempo original hacia el tiempo al que se
-  regresa.
+- Los rollbacks aparecen como flechas que apuntan desde el tiempo original hacia el tiempo al que se regresa.
 
 ## Análisis de escalabilidad
 
@@ -83,14 +68,10 @@ Para medir el *speedup* automáticamente, ejecutar:
 go run . -events 120 -speedup
 ```
 
-La aplicación correrá 4 simulaciones (1, 2, 4 y 8 workers), generará los logs
-`speedup_w1.log`, `speedup_w2.log`, etc., y mostrará los tiempos medidos junto con el *speedup*
-calculado respecto al caso de un worker.
+La aplicación correrá 4 simulaciones (1, 2, 4 y 8 workers), generará los logs `speedup_w1.log`, `speedup_w2.log`, etc., y mostrará los tiempos medidos junto con el *speedup* calculado respecto al caso de un worker.
 
-## Desarrollo futuro
+## Posibles trabajos futuros
 
 - Ajustar la generación de eventos internos/external para simular topologías reales.
-- Añadir opciones de persistencia de checkpoints/rollbacks a disco si se requieren ejecuciones más
-  largas.
-- Integrar métricas adicionales (latencias promedio, varianza de LVT entre workers, etc.) para un
-  análisis más detallado.
+- Añadir opciones de persistencia de checkpoints/rollbacks a disco si se requieren ejecuciones más largas.
+- Integrar métricas adicionales (latencias promedio, varianza de LVT entre workers, etc.) para un análisis más detallado.
